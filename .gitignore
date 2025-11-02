@@ -1,0 +1,12 @@
+scheduler
+*.exe
+*.db
+*.db-shm
+*.db-wal
+*.test
+*.out
+coverage.html
+.vscode/
+.idea/
+.DS_Store
+tmp/

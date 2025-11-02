@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  scheduler:
+    build: .
+    container_name: scheduler
+    environment:
+      - MODE=scheduler
+      - PORT=8080
+      - DB_PATH=/data/scheduler.db
+    ports:
+      - "8080:8080"
+    volumes:
+      - scheduler-data:/data
+    restart: unless-stopped
+
+  worker-1:
+    build: .
+    container_name: worker-1
+    environment:
+      - MODE=worker
+      - EXTRA_ARGS=-worker-id worker-1 -api-url http://scheduler:8080
+    volumes:
+      - scheduler-data:/data
+    depends_on:
+      - scheduler
+    restart: unless-stopped
+
+  worker-2:
+    build: .
+    container_name: worker-2
+    environment:
+      - MODE=worker
+      - EXTRA_ARGS=-worker-id worker-2 -api-url http://scheduler:8080
+    volumes:
+      - scheduler-data:/data
+    depends_on:
+      - scheduler
+    restart: unless-stopped
+
+volumes:
+  scheduler-data:
